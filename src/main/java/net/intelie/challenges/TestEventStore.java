@@ -23,7 +23,7 @@ public class TestEventStore {
         System.out.println("It should be 18: " + getSize(eventIterator1));
 
         // Get 'TypeA' events with timestamps between 115 to 160
-        // It should return 3 'TypeA' events with timestamps 120, 130, 140, 150 (160
+        // It should return 4 'TypeA' events with timestamps 120, 130, 140, 150 (160
         // excluded)
         EventIterator eventIterator2 = eventStore.query("TypeA", 115L, 160L);
         System.out.println("It should be 4: " + getSize(eventIterator2));
