@@ -15,16 +15,21 @@ public interface EventIterator extends AutoCloseable {
      * Gets the current event ref'd by this iterator.
      *
      * @return the event itself.
-     * @throws IllegalStateException if {@link #moveNext} was never called
-     *                               or its last result was {@code false}.
+     * @throws IllegalStateException if {@link #moveNext} was never called or its
+     *                               last result was {@code false}.
      */
     Event current();
 
     /**
      * Remove current event from its store.
      *
-     * @throws IllegalStateException if {@link #moveNext} was never called
-     *                               or its last result was {@code false}.
+     * @throws IllegalStateException if {@link #moveNext} was never called or its
+     *                               last result was {@code false}.
      */
     void remove();
+
+    /**
+     * Reset itertor. Move the iterator to the first event.
+     */
+    void reset();
 }
