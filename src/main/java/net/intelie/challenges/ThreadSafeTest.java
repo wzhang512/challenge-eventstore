@@ -6,7 +6,7 @@ package net.intelie.challenges;
  * This program demonstrates EventStore read/write operation is thread safe.
  *
  */
-public class ThreadSafeExample {
+public class ThreadSafeTest {
 
     public static void main(String[] args) {
 
