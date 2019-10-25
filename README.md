@@ -1,53 +1,29 @@
-# Implement EventStore
+# EventStore Implementation
 
-In this challenge, you will create a class that implements the `EventStore` 
-interface.
- 
-```java
-public interface EventStore {
-    void insert(Event event);
+This repository contains classes that implement EventStore read/write operations. 
 
-    void removeAll(String type);
+* EventIterator: event iterator interface
+* EventIteratoImpl: implementation of event iterator
+* EventStore: event store interface
+* EventStoreImpl: implementation of EventStore operations
+* TestEventStore: program class to test EventStore operations (similar to junit test cases)
+* EventTest.java: junit test cases 
+* ThreadSafeTest: program class to use one thread to execute write operation while use another thread to execute read operations simultaneously
 
-    EventIterator query(String type, long startTime, long endTime);
-}
-```
+Note: 
 
-Your implementation should store events in memory, using any data structures 
-you see fit for the task. The required behavior for the interface is described in the
-provided code javadocs, please see `EventStore` and `EventIterator`
-interfaces inside the `src/main/java` directory.
- 
-The implementation should be correct, fast, memory-efficient, and thread-safe. 
-You may consider that insertions, deletions, queries, and iterations 
-will happen frequently and concurrently. This will be a system hotspot. Optimize at will. 
+To make the implementation thread-safe, synchronized ArrayList is created to store the Events.
 
-We expect you to:
-* Write tests;
-* Provide some evidence of thread-safety;
-* Justify design choices, arguing about costs 
-  and benefits involved. You may write those as comments 
-  inline or, if you wish, provide a separate document 
-  summarizing those choices;
-* Write all code and documentation in english.
-  
-You may use external libraries, but their use has to be 
-properly justified as well.
- 
-This challenge is intentionally simple, we expect a simple,
-elegant, and polished solution. There is no unique solution to this challenge. 
-The intent is to evaluate candidate's coding proficiency and familiarity with 
-tools and best practices.
+There are two ways to create Synchronized ArrayList.
+1. Using Collections.synchronizedList() method
+2. Using CopyOnWriteArrayList
 
+Option #1 has a limitation. All of its read and write methods are synchronized on the list object itself. That means if a thread is executing Write operation, it blocks other threads which want to get the iterator to access elements in the list. Also, only one thread can iterate the list’s elements at a time, which is inefficient. If lots of read operations are executed concurrently, the Read performance will be an issue.
 
-## Solve this challenge
+Option #2 is designed to enable sequential write and concurrent reads features. For every write operation (i.e, insert, or removeAll) it makes a new copy of the elements in the list. That means the read operations (i.e, query) work on a different copy. But copying elements is costly. If many Write operations are performed, the approach will affect performance.
 
-To solve this challenge, you may fork this repository, then 
-send us a link with your implementation. Alternatively, if you do not want to have this repo on
-your profile (we totally get it), send us a 
-[git patch file](https://www.devroom.io/2009/10/26/how-to-create-and-apply-a-patch-with-git/) 
-with your changes.
+For the current implementation of the EventStore, I chose Option #2 (CopyOnWriteArrayList).
+* Multiple threads executing read operations concurrently.
+* Only one thread can execute write operation while other threads can execute read operations simultaneously.
 
-If you are already in the hiring process, you may send it to 
- whoever is your contact at Intelie. If you wish to apply for a job at 
- Intelie, please send your solution to [trabalhe@intelie.com.br](mailto:trabalhe@intelie.com.br).
+A testing program (ThreadSafeTest.java) is implemented to demonstrate the above features by using one thread to execute write operation while using another thread to execute read operations simultaneously. 
