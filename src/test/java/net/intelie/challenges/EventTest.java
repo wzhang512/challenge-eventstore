@@ -2,13 +2,14 @@ package net.intelie.challenges;
 
 import org.junit.Test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
-public class EventTest extends TestCase {
+public class EventTest {
 
-    protected EventStore eventStore = new EventStoreImpl();
+    private EventStore eventStore = new EventStoreImpl();
 
-    protected void setUp() {
+    @Test
+    public void TestInsert() {
         // Insert 10 'TypeA' events with timestamps between 100 to 190
         for (int i = 0; i < 10; i++)
             eventStore.insert(new Event("TypeA", 100L + i * 10));
@@ -20,6 +21,11 @@ public class EventTest extends TestCase {
         // Insert 3 'TypeC' events with timestamps 180, 210, 240
         for (int i = 0; i < 3; i++)
             eventStore.insert(new Event("TypeC", 180L + i * 30));
+
+        // Retrieve the events with timestamps between 100 to 250
+        // It should return all 18 events
+        EventIterator eventIterator = eventStore.query(100L, 250L);
+        assertEquals(18, getSize(eventIterator));
     }
 
     @Test
@@ -48,11 +54,6 @@ public class EventTest extends TestCase {
 
     @Test
     public void TestRemoveAll() throws Exception {
-
-        // Retrieve the events with timestamps between 100 to 250
-        // It should return all 18 events
-        EventIterator eventIterator1 = eventStore.query(100L, 250L);
-        assertEquals(18, getSize(eventIterator1));
 
         // Remove all 'TypeA' events
         eventStore.removeAll("TypeA");
