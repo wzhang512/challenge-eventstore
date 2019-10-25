@@ -1,6 +1,6 @@
 package net.intelie.challenges;
 
-public class test {
+public class TestEventStore {
     public static void main(String[] args) {
 
         EventStore eventStore = new EventStoreImpl();
