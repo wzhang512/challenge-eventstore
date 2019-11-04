@@ -6,10 +6,11 @@ import static org.junit.Assert.assertEquals;
 
 public class EventTest {
 
-    private EventStore eventStore = new EventStoreImpl();
-
     @Test
     public void TestInsert() {
+
+        EventStore eventStore = new EventStoreImpl();
+
         // Insert 10 'TypeA' events with timestamps between 100 to 190
         for (int i = 0; i < 10; i++)
             eventStore.insert(new Event("TypeA", 100L + i * 10));
@@ -30,6 +31,20 @@ public class EventTest {
 
     @Test
     public void TestQuery() throws Exception {
+
+        EventStore eventStore = new EventStoreImpl();
+
+        // Insert 10 'TypeA' events with timestamps between 100 to 190
+        for (int i = 0; i < 10; i++)
+            eventStore.insert(new Event("TypeA", 100L + i * 10));
+
+        // Insert 5 'TypeB' events with timestamps 120, 140, 160, 180, 200
+        for (int i = 0; i < 5; i++)
+            eventStore.insert(new Event("TypeB", 120L + i * 20));
+
+        // Insert 3 'TypeC' events with timestamps 180, 210, 240
+        for (int i = 0; i < 3; i++)
+            eventStore.insert(new Event("TypeC", 180L + i * 30));
 
         // Get 'TypeA' events with timestamps between 115 to 160
         // It should return 4 'TypeA' events with timestamps 120, 130, 140, 150
@@ -54,6 +69,20 @@ public class EventTest {
 
     @Test
     public void TestRemoveAll() throws Exception {
+
+        EventStore eventStore = new EventStoreImpl();
+
+        // Insert 10 'TypeA' events with timestamps between 100 to 190
+        for (int i = 0; i < 10; i++)
+            eventStore.insert(new Event("TypeA", 100L + i * 10));
+
+        // Insert 5 'TypeB' events with timestamps 120, 140, 160, 180, 200
+        for (int i = 0; i < 5; i++)
+            eventStore.insert(new Event("TypeB", 120L + i * 20));
+
+        // Insert 3 'TypeC' events with timestamps 180, 210, 240
+        for (int i = 0; i < 3; i++)
+            eventStore.insert(new Event("TypeC", 180L + i * 30));
 
         // Remove all 'TypeA' events
         eventStore.removeAll("TypeA");
